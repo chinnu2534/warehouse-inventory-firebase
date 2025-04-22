@@ -1,0 +1,13 @@
+{
+    "require": {
+        "google/apiclient": "2.14",
+        "gemini-api-php/client": "^1.7",
+        "setasign/fpdf": "^1.8",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
