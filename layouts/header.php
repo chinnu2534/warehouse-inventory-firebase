@@ -62,15 +62,15 @@
       // DEBUG: Remove this after fixing
       echo "<!-- DEBUG: user_level=" . ($user['user_level'] ?? 'NULL') . " Type=" . gettype($user['user_level'] ?? null) . " -->";
       ?>
-      <?php if (($user['user_level'] ?? '') === '1'): ?>
+      <?php if (($user['user_level'] ?? '') == '1'): ?>
         <!-- admin menu -->
         <?php include_once('admin_menu.php'); ?>
 
-      <?php elseif (($user['user_level'] ?? '') === '2'): ?>
+      <?php elseif (($user['user_level'] ?? '') == '2'): ?>
         <!-- Special user -->
         <?php include_once('special_menu.php'); ?>
 
-      <?php elseif (($user['user_level'] ?? '') === '3'): ?>
+      <?php elseif (($user['user_level'] ?? '') == '3'): ?>
         <!-- User menu -->
         <?php include_once('user_menu.php'); ?>
 

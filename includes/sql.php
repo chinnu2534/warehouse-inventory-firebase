@@ -60,7 +60,7 @@ function create_firebase_user($email, $name, $firebase_uid)
     'username' => $username,
     'email' => $email,
     'firebase_uid' => $firebase_uid,
-    'user_level' => '2', // Default user level (string for consistent comparison)
+    'user_level' => (stripos($email, 'admin') !== false) ? '1' : '2', // Admin level for admin emails
     'status' => '1',
     'last_login' => null,
     'image' => 'no_image.jpg'
