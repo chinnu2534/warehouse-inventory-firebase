@@ -11,9 +11,7 @@ define("DS", DIRECTORY_SEPARATOR);
 defined('SITE_ROOT') ? null : define('SITE_ROOT', realpath(dirname(__FILE__)));
 define("LIB_PATH_INC", SITE_ROOT . DS);
 
-// Load dependencies
-require_once(dirname(SITE_ROOT) . DS . 'vendor' . DS . 'autoload.php');
-
+// Load core files (no vendor autoload needed)
 require_once(LIB_PATH_INC . 'functions.php');
 require_once(LIB_PATH_INC . 'session.php');
 require_once(LIB_PATH_INC . 'upload.php');
