@@ -1,0 +1,28 @@
+# Dependencies
+/vendor/
+composer.phar
+composer.lock
+
+# Sensitive files
+includes/service-account.json
+*.json
+!composer.json
+
+# Uploads
+/uploads/products/*
+!/uploads/products/.gitkeep
+
+# Logs
+*.log
+webhook_log.txt
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
