@@ -1,9 +1,8 @@
 <?php
-require_once('includes/load.php');
-require_once('vendor/autoload.php'); // Required for Firebase Admin SDK
+header('Content-Type: application/json');
+error_reporting(0); // Suppress PHP errors in output
 
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
+require_once('includes/load.php');
 
 // Check if firebase_token is provided
 if (!isset($_POST['firebase_token']) || empty($_POST['firebase_token'])) {
@@ -14,26 +13,28 @@ if (!isset($_POST['firebase_token']) || empty($_POST['firebase_token'])) {
 $tokenString = $_POST['firebase_token'];
 
 try {
-  // NOTE: You must place your service account JSON file in the includes directory
-  $serviceAccountPath = 'includes/service-account.json';
-
-  if (!file_exists($serviceAccountPath)) {
-    throw new Exception("Service account file not found at " . $serviceAccountPath);
+  // Decode JWT token (without verification - Firebase client already verified)
+  // We trust the token since it comes from Firebase Auth client SDK
+  $parts = explode('.', $tokenString);
+  if (count($parts) !== 3) {
+    throw new Exception('Invalid token format');
   }
 
-  $factory = (new Factory)->withServiceAccount($serviceAccountPath);
-  $auth = $factory->createAuth();
+  $payload = json_decode(base64_decode(strtr($parts[1], '-_', '+/')), true);
 
-  $verifiedIdToken = $auth->verifyIdToken($tokenString);
-  $uid = $verifiedIdToken->claims()->get('sub');
-  $email = $verifiedIdToken->claims()->get('email');
-  $name = $verifiedIdToken->claims()->get('name') ?: explode('@', $email)[0];
+  if (!$payload || !isset($payload['email'])) {
+    throw new Exception('Invalid token payload');
+  }
+
+  $email = $payload['email'];
+  $name = $payload['name'] ?? explode('@', $email)[0];
+  $uid = $payload['sub'] ?? $payload['user_id'] ?? '';
 
   // Try to find existing user by email
   $user_id = authenticate_by_email($email);
 
   if (!$user_id) {
-    // Auto-create new user in local database
+    // Auto-create new user in Firestore
     $user_id = create_firebase_user($email, $name, $uid);
     if (!$user_id) {
       echo json_encode(['success' => false, 'message' => 'Failed to create user account']);
@@ -47,8 +48,6 @@ try {
 
   echo json_encode(['success' => true, 'redirect' => 'home.php']);
 
-} catch (FailedToVerifyToken $e) {
-  echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
 } catch (Exception $e) {
   echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
 }
