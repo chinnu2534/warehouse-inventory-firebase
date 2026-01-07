@@ -1,16 +1,15 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-| OWSA-INV V2 - Railway Compatible
+| Database Configuration - Render Compatible
 |--------------------------------------------------------------------------
-| Database configuration using environment variables for Railway deployment.
 */
 
-// Use environment variables with fallbacks for local development
-$db_host = getenv('MYSQLHOST') ?: getenv('DB_HOST') ?: 'localhost';
-$db_user = getenv('MYSQLUSER') ?: getenv('DB_USER') ?: 'root';
-$db_pass = getenv('MYSQLPASSWORD') ?: getenv('DB_PASS') ?: '';
-$db_name = getenv('MYSQLDATABASE') ?: getenv('DB_NAME') ?: 'oswa_inv';
+// Render uses standard environment variable names
+$db_host = getenv('DB_HOST') ?: getenv('MYSQLHOST') ?: 'localhost';
+$db_user = getenv('DB_USER') ?: getenv('MYSQLUSER') ?: 'root';
+$db_pass = getenv('DB_PASS') ?: getenv('MYSQLPASSWORD') ?: '';
+$db_name = getenv('DB_NAME') ?: getenv('MYSQLDATABASE') ?: 'oswa_inv';
 
 define('DB_HOST', $db_host);
 define('DB_USER', $db_user);
