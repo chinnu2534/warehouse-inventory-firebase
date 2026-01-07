@@ -234,4 +234,3 @@ class FirestoreDB
 $db = FirestoreDB::getInstance();
 
 ?>
-```
