@@ -76,9 +76,18 @@ function current_user()
 {
   static $current_user;
   global $db;
+  global $session; // Added for logout functionality
   if (!$current_user) {
     if (isset($_SESSION['user_id'])) {
-      $current_user = find_by_id('users', $_SESSION['user_id']);
+      $user = find_by_id('users', $_SESSION['user_id']);
+      // Validate user data integrity
+      if ($user && isset($user['user_level'])) {
+        $current_user = $user;
+      } else {
+        // User data corrupted or missing - force logout
+        $session->logout();
+        $current_user = null;
+      }
     }
   }
   return $current_user;
