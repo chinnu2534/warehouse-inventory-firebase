@@ -5,11 +5,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     git \
+    curl \
     && docker-php-ext-install zip \
     && rm -rf /var/lib/apt/lists/*
-
-# Increase PHP memory limit for Composer
-RUN echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/memory.ini
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -17,17 +15,14 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy composer files first (for better caching)
-COPY composer.json ./
-
-# Install PHP dependencies with increased memory
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts
-
-# Copy application files
+# Copy all files first
 COPY . /var/www/html/
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
@@ -44,5 +39,5 @@ RUN echo '<Directory /var/www/html>\n\
 # Expose port
 EXPOSE 10000
 
-# Start Apache on Render's port
+# Start Apache
 CMD sed -i "s/80/${PORT:-10000}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && apache2-foreground
