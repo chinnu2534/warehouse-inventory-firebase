@@ -70,24 +70,24 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"
               style="color: white; opacity: 1;"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="welcomeModalLabel" style="font-weight: bold; letter-spacing: 0.5px;">
-              <i class="glyphicon glyphicon-info-sign"></i> A Note on My Professional Journey
+              <i class="glyphicon glyphicon-question-sign"></i> Am I "Overqualified"? A Quick Note.
             </h4>
           </div>
           <div class="modal-body" style="padding: 30px; font-size: 16px; line-height: 1.6; color: #444;">
-            <p style="margin-bottom: 20px;"><strong>Welcome! Before you review my profile, I’d like to share a brief
-                context.</strong></p>
+            <p style="margin-bottom: 20px;"><strong>Welcome! Before you review my profile, I want to address a common
+                thought.</strong></p>
 
-            <p>You may notice a uniquely broad range of qualifications in my background. This versatility is intentional.
-            </p>
+            <p>You might think, <em>"This candidate seems overqualified."</em> Let me explain why that's actually an
+              asset.</p>
 
-            <p>My career transition from India to the USA inspired me to master a wide spectrum of technologies—ranging
-              from <strong>Full-Stack Development</strong> to advanced research in <strong>AI/ML, Quantum Technologies,
-                and Cryptography</strong>.</p>
+            <p>My career transition from India to the USA demanded that I master a broad spectrum of technologies—from
+              <strong>Full-Stack Development</strong> to <strong>AI/ML, Quantum Tech, and Cryptography</strong>—not to be
+              "too much," but to be <strong>adaptable</strong>.</p>
 
             <p style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #764ba2; border-radius: 4px;">
-              <em>My goal wasn't just to be "over-qualified," but to be <strong>future-proof</strong>. This adaptability
-                ensures that no matter how technology evolves, I can pivot, innovate, and contribute significant value to
-                your team immediately.</em>
+              <em>I built this diverse skillset to ensure job security and future-proof value. I am not looking for a
+                stepping stone; I am looking to bring this <strong>resilience and versatility</strong> to your team to
+                solve problems today and innovate for tomorrow.</em>
             </p>
           </div>
           <div class="modal-footer" style="padding: 20px; border-top: none;">
@@ -99,22 +99,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal Script -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Check if user has already seen the modal using localStorage
-        if (!localStorage.getItem('welcomeModalSeen')) {
-          // Show modal using jQuery (Bootstrap dependency)
-          setTimeout(function () {
-            $('#welcomeModal').modal('show');
-          }, 500); // Small delay for better UX
-
-          // Set flag so it doesn't show again in this browser
-          localStorage.setItem('welcomeModalSeen', 'true');
-        }
-      });
-    </script>
     <div class="sidebar">
       <?php
       // DEBUG: Remove this after fixing
