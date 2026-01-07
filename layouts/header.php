@@ -28,8 +28,9 @@
           <ul class="info-menu list-inline list-unstyled">
             <li class="profile">
               <a href="#" data-toggle="dropdown" class="toggle" aria-expanded="false">
-                <img src="uploads/users/<?php echo $user['image']; ?>" alt="user-image" class="img-circle img-inline">
-                <span><?php echo remove_junk(ucfirst($user['name'])); ?> <i class="caret"></i></span>
+                <img src="uploads/users/<?php echo $user['image'] ?? 'default.jpg'; ?>" alt="user-image"
+                  class="img-circle img-inline">
+                <span><?php echo remove_junk(ucfirst($user['name'] ?? 'User')); ?> <i class="caret"></i></span>
               </a>
               <ul class="dropdown-menu">
                 <li>
@@ -57,15 +58,15 @@
       </div>
     </header>
     <div class="sidebar">
-      <?php if ($user['user_level'] === '1'): ?>
+      <?php if (($user['user_level'] ?? '') === '1'): ?>
         <!-- admin menu -->
         <?php include_once('admin_menu.php'); ?>
 
-      <?php elseif ($user['user_level'] === '2'): ?>
+      <?php elseif (($user['user_level'] ?? '') === '2'): ?>
         <!-- Special user -->
         <?php include_once('special_menu.php'); ?>
 
-      <?php elseif ($user['user_level'] === '3'): ?>
+      <?php elseif (($user['user_level'] ?? '') === '3'): ?>
         <!-- User menu -->
         <?php include_once('user_menu.php'); ?>
 
