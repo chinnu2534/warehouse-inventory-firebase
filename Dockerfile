@@ -6,8 +6,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache modules
+RUN a2enmod rewrite headers
 
 # Set working directory
 WORKDIR /var/www/html
