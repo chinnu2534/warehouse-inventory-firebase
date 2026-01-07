@@ -58,6 +58,10 @@
       </div>
     </header>
     <div class="sidebar">
+      <?php
+      // DEBUG: Remove this after fixing
+      echo "<!-- DEBUG: user_level=" . ($user['user_level'] ?? 'NULL') . " Type=" . gettype($user['user_level'] ?? null) . " -->";
+      ?>
       <?php if (($user['user_level'] ?? '') === '1'): ?>
         <!-- admin menu -->
         <?php include_once('admin_menu.php'); ?>
