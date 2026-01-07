@@ -200,11 +200,16 @@ class FirestoreDB
   public function update($collection, $id, $data)
   {
     $fields = [];
+    $maskPaths = [];
+
     foreach ($data as $key => $value) {
       $fields[$key] = $this->encodeValue($value);
+      $maskPaths[] = "updateMask.fieldPaths=$key";
     }
 
-    $this->request('PATCH', "/$collection/$id", ['fields' => $fields]);
+    $queryString = implode('&', $maskPaths);
+    // Append query string to path
+    $this->request('PATCH', "/$collection/$id?$queryString", ['fields' => $fields]);
     return true;
   }
 
