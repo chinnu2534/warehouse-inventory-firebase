@@ -223,8 +223,15 @@ class FirestoreDB
   {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
   }
+
+  public function db_disconnect()
+  {
+    // No-op for Firestore (REST API doesn't maintain persistent connections)
+    return true;
+  }
 }
 
 $db = FirestoreDB::getInstance();
 
 ?>
+```
