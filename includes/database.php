@@ -1,7 +1,7 @@
 <?php
 /**
  * Firebase Firestore REST API Client
- * Lightweight alternative to the full Firebase SDK
+ * Uses FIREBASE_SERVICE_ACCOUNT environment variable
  */
 
 class FirestoreDB
@@ -13,14 +13,23 @@ class FirestoreDB
 
   private function __construct()
   {
-    // Read service account
-    $serviceAccountPath = __DIR__ . '/service-account.json';
+    // Try environment variable first, then file
+    $serviceAccountJson = getenv('FIREBASE_SERVICE_ACCOUNT');
 
-    if (!file_exists($serviceAccountPath)) {
-      throw new Exception("Firebase service account file not found");
+    if ($serviceAccountJson) {
+      $serviceAccount = json_decode($serviceAccountJson, true);
+    } else {
+      // Fallback to file for local development
+      $serviceAccountPath = __DIR__ . '/service-account.json';
+      if (!file_exists($serviceAccountPath)) {
+        $serviceAccountPath = __DIR__ . '/json.json';
+      }
+      if (!file_exists($serviceAccountPath)) {
+        throw new Exception("Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT env var or add service-account.json");
+      }
+      $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
     }
 
-    $serviceAccount = json_decode(file_get_contents($serviceAccountPath), true);
     $this->projectId = $serviceAccount['project_id'];
     $this->baseUrl = "https://firestore.googleapis.com/v1/projects/{$this->projectId}/databases/(default)/documents";
 
@@ -39,8 +48,8 @@ class FirestoreDB
   private function getAccessToken($serviceAccount)
   {
     $now = time();
-    $header = base64_encode(json_encode(['alg' => 'RS256', 'typ' => 'JWT']));
-    $claim = base64_encode(json_encode([
+    $header = $this->base64UrlEncode(json_encode(['alg' => 'RS256', 'typ' => 'JWT']));
+    $claim = $this->base64UrlEncode(json_encode([
       'iss' => $serviceAccount['client_email'],
       'scope' => 'https://www.googleapis.com/auth/datastore',
       'aud' => 'https://oauth2.googleapis.com/token',
@@ -50,7 +59,7 @@ class FirestoreDB
 
     $signature = '';
     openssl_sign("$header.$claim", $signature, $serviceAccount['private_key'], 'SHA256');
-    $jwt = "$header.$claim." . base64_encode($signature);
+    $jwt = "$header.$claim." . $this->base64UrlEncode($signature);
 
     $ch = curl_init('https://oauth2.googleapis.com/token');
     curl_setopt_array($ch, [
@@ -65,7 +74,16 @@ class FirestoreDB
     $response = json_decode(curl_exec($ch), true);
     curl_close($ch);
 
-    return $response['access_token'] ?? null;
+    if (!isset($response['access_token'])) {
+      throw new Exception("Failed to get access token: " . json_encode($response));
+    }
+
+    return $response['access_token'];
+  }
+
+  private function base64UrlEncode($data)
+  {
+    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
   }
 
   private function request($method, $path, $data = null)
